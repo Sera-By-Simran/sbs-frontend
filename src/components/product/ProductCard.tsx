@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTray } from '@/context/TrayContext';
 import { Heart, Plus, ShoppingBag } from 'lucide-react';
+import { getMediaUrl } from '@/lib/media';
 
 interface ProductCardProps {
   product: {
@@ -54,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Link href={`/products/${product.slug}`} className="block w-full h-full">
           {product.image_url ? (
             <img
-              src={product.image_url}
+              src={getMediaUrl(product.image_url)}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"

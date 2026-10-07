@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand/BrandLogo';
-import { MessageCircle, Gem, Sparkles, HeartHandshake, CheckCircle2, ArrowRight } from 'lucide-react';
+import {
+  Instagram,
+  ArrowRight,
+  Heart,
+  Youtube,
+  Share2,
+} from 'lucide-react';
 
 export const BoutiqueFooter: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -40,48 +46,49 @@ export const BoutiqueFooter: React.FC = () => {
 
   return (
     <footer className="bg-sera-espresso text-sera-ivory font-sans border-t border-sera-taupe/20">
-      {/* Upper Concierge Bar */}
-      <div className="border-b border-sera-taupe/20 py-10 px-6 lg:px-12">
-        <div className="max-w-container mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          <div>
-            <span className="text-[10px] uppercase tracking-[0.25em] text-sera-champagne font-semibold block mb-1">
-              Private Concierge Consultation
-            </span>
-            <h3 className="font-serif text-2xl font-normal text-sera-ivory">
-              Personalised Styling & Custom Inquiries
-            </h3>
-            <p className="text-xs text-sera-taupe/90 mt-1 max-w-md">
-              Connect with our styling team for sizing guidance, gift curation, and bespoke order requests.
-            </p>
-          </div>
-
-          <a
-            href="https://wa.me/?text=Hello%20SÉRA%20Concierge,%20I%20would%20like%20to%20enquire%20about%20your%20jewellery%20collection."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-2 bg-sera-champagne text-sera-espresso px-6 py-3 rounded-sm text-xs uppercase tracking-widest font-semibold hover:opacity-90 transition-opacity shadow-sm"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>Connect on WhatsApp</span>
-          </a>
-        </div>
-      </div>
-
-      {/* Main Footer Directory */}
-      <div className="py-14 px-6 lg:px-12 max-w-container mx-auto grid grid-cols-1 md:grid-cols-5 gap-10">
-        {/* Brand & Newsletter Column */}
-        <div className="md:col-span-2 space-y-4">
+      {/* Main Footer Content (Board 07 Layout) */}
+      <div className="py-14 px-6 lg:px-12 max-w-container mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
+        {/* Brand & Socials Column (Left) */}
+        <div className="md:col-span-5 space-y-4">
           <BrandLogo variant="footer" priority={false} />
-          <p className="text-xs text-sera-taupe leading-relaxed mt-3 max-w-sm">
-            SÉRA BY SIMRAN is a luxury demi-fine boutique crafting timeless, conscious jewellery designed for the modern woman who embraces quiet opulence.
+          <p className="text-xs text-sera-taupe leading-relaxed max-w-sm">
+            Timeless jewellery for every you. Minimal designs, Modern expressions. Crafted with conscious 18K gold vermeil and sterling silver.
           </p>
 
+          {/* Social Icons (Board 07) */}
+          <div className="flex items-center space-x-3 pt-2 text-sera-taupe">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 rounded-full border border-sera-taupe/30 hover:text-sera-ivory hover:border-sera-ivory transition-colors"
+              title="Instagram"
+            >
+              <Instagram className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://pinterest.com"
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 rounded-full border border-sera-taupe/30 hover:text-sera-ivory hover:border-sera-ivory transition-colors"
+              title="Pinterest"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 rounded-full border border-sera-taupe/30 hover:text-sera-ivory hover:border-sera-ivory transition-colors"
+              title="YouTube"
+            >
+              <Youtube className="w-3.5 h-3.5" />
+            </a>
+          </div>
+
           {/* Newsletter Box */}
-          <div className="pt-2">
-            <span className="text-[10px] uppercase tracking-widest text-sera-champagne font-semibold block mb-2">
-              SÉRA Private Client Journal
-            </span>
-            <form onSubmit={handleNewsletter} className="relative max-w-sm">
+          <div className="pt-3 max-w-sm">
+            <form onSubmit={handleNewsletter} className="relative">
               <input
                 type="text"
                 name="_hp"
@@ -117,115 +124,107 @@ export const BoutiqueFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* Boutiques & Collections */}
-        <div>
-          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold mb-4">
-            Catalogue
+        {/* Column 1: Shop */}
+        <div className="md:col-span-2 space-y-3">
+          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold">
+            Shop
           </h4>
           <ul className="space-y-2 text-xs text-sera-ivory/80">
             <li>
+              <Link href="/boutique?category=necklaces" className="hover:text-sera-champagne transition-colors">
+                Necklaces
+              </Link>
+            </li>
+            <li>
+              <Link href="/boutique?category=earrings" className="hover:text-sera-champagne transition-colors">
+                Earrings
+              </Link>
+            </li>
+            <li>
+              <Link href="/boutique?category=rings" className="hover:text-sera-champagne transition-colors">
+                Rings
+              </Link>
+            </li>
+            <li>
+              <Link href="/boutique?category=bracelets" className="hover:text-sera-champagne transition-colors">
+                Bracelets
+              </Link>
+            </li>
+            <li>
               <Link href="/boutique" className="hover:text-sera-champagne transition-colors">
-                The Complete Boutique
-              </Link>
-            </li>
-            <li>
-              <Link href="/collections" className="hover:text-sera-champagne transition-colors">
-                Curated Collections
-              </Link>
-            </li>
-            <li>
-              <Link href="/edit" className="hover:text-sera-champagne transition-colors">
-                SÉRA EDIT (Journal)
-              </Link>
-            </li>
-            <li>
-              <Link href="/showroom" className="hover:text-sera-champagne transition-colors">
-                Digital Showroom Tour
-              </Link>
-            </li>
-            <li>
-              <Link href="/wishlist" className="hover:text-sera-champagne transition-colors">
-                Personal Wishlist
+                All Collections
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Client Care & Tracking */}
-        <div>
-          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold mb-4">
-            Client Concierge
+        {/* Column 2: Help */}
+        <div className="md:col-span-2 space-y-3">
+          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold">
+            Help
           </h4>
           <ul className="space-y-2 text-xs text-sera-ivory/80">
             <li>
-              <Link href="/track-order" className="hover:text-sera-champagne transition-colors">
-                Track Order Status
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover:text-sera-champagne transition-colors">
-                Contact Concierge
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="hover:text-sera-champagne transition-colors">
-                The SÉRA Story
-              </Link>
-            </li>
-            <li>
               <Link href="/policies/shipping" className="hover:text-sera-champagne transition-colors">
-                Shipping & Delivery
+                Shipping
               </Link>
             </li>
             <li>
               <Link href="/policies/returns" className="hover:text-sera-champagne transition-colors">
-                Returns & Exchange
+                Returns
+              </Link>
+            </li>
+            <li>
+              <Link href="/edit" className="hover:text-sera-champagne transition-colors">
+                Jewellery Care
+              </Link>
+            </li>
+            <li>
+              <Link href="/track-order" className="hover:text-sera-champagne transition-colors">
+                Track Order
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Brand Commitments */}
-        <div className="space-y-3">
-          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold mb-2">
-            The SÉRA Standards
+        {/* Column 3: About */}
+        <div className="md:col-span-3 space-y-3">
+          <h4 className="text-xs uppercase tracking-widest text-sera-champagne font-semibold">
+            About
           </h4>
-          <div className="flex items-start space-x-2.5 text-xs text-sera-taupe">
-            <Gem className="w-4 h-4 text-sera-champagne flex-shrink-0 mt-0.5" />
-            <span>Artisan Handcrafted Demi-Fine Jewellery</span>
-          </div>
-          <div className="flex items-start space-x-2.5 text-xs text-sera-taupe">
-            <HeartHandshake className="w-4 h-4 text-sera-champagne flex-shrink-0 mt-0.5" />
-            <span>Personalised Concierge Guidance</span>
-          </div>
-          <div className="flex items-start space-x-2.5 text-xs text-sera-taupe">
-            <Sparkles className="w-4 h-4 text-sera-champagne flex-shrink-0 mt-0.5" />
-            <span>Signature SÉRA Keepsake Packaging</span>
-          </div>
-          <div className="flex items-start space-x-2.5 text-xs text-sera-taupe">
-            <CheckCircle2 className="w-4 h-4 text-sera-champagne flex-shrink-0 mt-0.5" />
-            <span>Pan-India Safe Delivery</span>
-          </div>
+          <ul className="space-y-2 text-xs text-sera-ivory/80">
+            <li>
+              <Link href="/about" className="hover:text-sera-champagne transition-colors">
+                Our Story
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-sera-champagne transition-colors">
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/policies/privacy" className="hover:text-sera-champagne transition-colors">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/policies/terms" className="hover:text-sera-champagne transition-colors">
+                Terms &amp; Conditions
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
 
-      {/* Policies & Copyright Bar */}
+      {/* Bottom Sub-bar (Board 07) */}
       <div className="border-t border-sera-taupe/20 py-6 px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-sera-taupe max-w-container mx-auto">
-        <p>© 2026 SÉRA BY SIMRAN. All Rights Reserved. Luxury Demi-Fine Jewellery.</p>
-        <div className="flex items-center space-x-6 text-[11px]">
-          <Link href="/policies/privacy" className="hover:text-sera-ivory transition-colors">
-            Privacy Policy
-          </Link>
-          <Link href="/policies/terms" className="hover:text-sera-ivory transition-colors">
-            Terms of Service
-          </Link>
-          <Link href="/policies/shipping" className="hover:text-sera-ivory transition-colors">
-            Shipping Policy
-          </Link>
-          <Link href="/policies/returns" className="hover:text-sera-ivory transition-colors">
-            Returns Policy
-          </Link>
-        </div>
+        <p>© 2026 SÉRA BY SIMRAN. All rights reserved.</p>
+        <p className="flex items-center space-x-1 text-[11px]">
+          <span>Made with</span>
+          <Heart className="w-3 h-3 fill-rose-500 text-rose-500 inline" />
+          <span>for timeless women.</span>
+        </p>
       </div>
     </footer>
   );

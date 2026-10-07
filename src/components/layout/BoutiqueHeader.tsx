@@ -48,21 +48,23 @@ export const BoutiqueHeader: React.FC = () => {
             </Link>
 
             <nav className="hidden md:flex space-x-7 text-xs uppercase tracking-widest font-semibold text-sera-espresso/80">
-              <Link href="/boutique" className="hover:text-sera-espresso transition-colors">
-                Boutique
+              <Link href="/" className="hover:text-sera-espresso transition-colors">
+                Home
               </Link>
-              <Link href="/collections" className="hover:text-sera-espresso transition-colors">
+              <Link href="/boutique" className="hover:text-sera-espresso transition-colors">
                 Collections
+              </Link>
+              <Link href="/boutique?badge=bestseller" className="hover:text-sera-espresso transition-colors">
+                Bestsellers
               </Link>
               <Link href="/edit" className="hover:text-sera-espresso transition-colors">
                 SÉRA EDIT
               </Link>
-              <Link href="/showroom" className="hover:text-sera-espresso transition-colors flex items-center space-x-1">
-                <Sparkles className="w-3 h-3 text-sera-taupe" />
-                <span>Showroom</span>
-              </Link>
               <Link href="/about" className="hover:text-sera-espresso transition-colors">
                 About
+              </Link>
+              <Link href="/contact" className="hover:text-sera-espresso transition-colors">
+                Contact
               </Link>
             </nav>
           </div>

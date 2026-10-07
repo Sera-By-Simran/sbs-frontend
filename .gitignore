@@ -26,3 +26,14 @@ Thumbs.db
 
 # Operational scripts (Private)
 scripts/
+
+# Images and media assets (NEVER committed to git; hosted in Supabase bucket)
+public/editorial/
+public/uploads/
+*.jpg
+*.jpeg
+*.webp
+*.avif
+!public/brand/*.svg
+!public/brand/*.png
+!public/favicon.ico
