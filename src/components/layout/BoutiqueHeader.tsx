@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand/BrandLogo';
 import { useTray } from '@/context/TrayContext';
+import { SearchModal } from '@/components/search/SearchModal';
 import {
   Heart,
   ShoppingBag,
@@ -17,12 +18,13 @@ import {
 export const BoutiqueHeader: React.FC = () => {
   const { totalTrayCount, wishlist, openTray } = useTray();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <>
       {/* Announcement Bar */}
       <div className="bg-sera-espresso text-sera-ivory text-center py-2 px-4 text-[11px] tracking-[0.2em] uppercase font-medium border-b border-sera-taupe/20">
-        <span>Bespoke Demi-Fine Luxury • Complimentary Insured Pan-India Transit</span>
+        <span>Bespoke Demi-Fine Luxury • Handcrafted Pan-India Jewellery</span>
       </div>
 
       {/* Main Header */}
@@ -49,34 +51,44 @@ export const BoutiqueHeader: React.FC = () => {
               <Link href="/boutique" className="hover:text-sera-espresso transition-colors">
                 Boutique
               </Link>
-              <Link href="/boutique?category=necklaces" className="hover:text-sera-espresso transition-colors">
-                Necklaces
+              <Link href="/collections" className="hover:text-sera-espresso transition-colors">
+                Collections
               </Link>
-              <Link href="/boutique?category=earrings" className="hover:text-sera-espresso transition-colors">
-                Earrings
+              <Link href="/edit" className="hover:text-sera-espresso transition-colors">
+                SÉRA EDIT
               </Link>
-              <Link href="/boutique?category=rings" className="hover:text-sera-espresso transition-colors">
-                Rings
-              </Link>
-              <Link href="/#showroom" className="hover:text-sera-espresso transition-colors flex items-center space-x-1">
+              <Link href="/showroom" className="hover:text-sera-espresso transition-colors flex items-center space-x-1">
                 <Sparkles className="w-3 h-3 text-sera-taupe" />
                 <span>Showroom</span>
               </Link>
-              <Link href="/#about" className="hover:text-sera-espresso transition-colors">
+              <Link href="/about" className="hover:text-sera-espresso transition-colors">
                 About
               </Link>
             </nav>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-4 sm:space-x-6 text-xs uppercase tracking-wider font-medium">
-            <Link
-              href="/boutique"
-              className="hidden sm:flex items-center space-x-1 text-sera-espresso/70 hover:text-sera-espresso transition-colors"
+          <div className="flex items-center space-x-4 sm:space-x-5 text-xs uppercase tracking-wider font-medium">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center space-x-1 text-sera-espresso/70 hover:text-sera-espresso transition-colors p-1"
               title="Search catalogue"
             >
               <Search className="w-4 h-4" />
               <span className="hidden lg:inline text-[11px]">Search</span>
+            </button>
+
+            <Link
+              href="/wishlist"
+              className="relative p-1 text-sera-espresso/70 hover:text-sera-espresso transition-colors flex items-center space-x-1"
+              title="Saved Keepsakes"
+            >
+              <Heart className="w-4 h-4" />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1 -right-2 bg-rose-800 text-white text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
+                  {wishlist.length}
+                </span>
+              )}
             </Link>
 
             <button
@@ -114,43 +126,53 @@ export const BoutiqueHeader: React.FC = () => {
               All Jewellery Pieces
             </Link>
             <Link
-              href="/boutique?category=necklaces"
+              href="/collections"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-1 hover:text-sera-taupe"
             >
-              Necklaces & Pendants
+              Curated Collections
             </Link>
             <Link
-              href="/boutique?category=earrings"
+              href="/edit"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-1 hover:text-sera-taupe"
             >
-              Earrings & Studs
+              SÉRA EDIT (Journal)
             </Link>
             <Link
-              href="/boutique?category=rings"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-1 hover:text-sera-taupe"
-            >
-              Rings & Bands
-            </Link>
-            <Link
-              href="/#showroom"
+              href="/showroom"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-1 hover:text-sera-taupe"
             >
               Virtual Showroom
             </Link>
             <Link
-              href="/#about"
+              href="/wishlist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 hover:text-sera-taupe"
+            >
+              Wishlist ({wishlist.length})
+            </Link>
+            <Link
+              href="/about"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-1 hover:text-sera-taupe"
             >
               The SÉRA Story
             </Link>
+            <Link
+              href="/track-order"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 hover:text-sera-taupe"
+            >
+              Track Order Status
+            </Link>
           </div>
         )}
       </header>
+
+      {/* Instant Search Modal */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 };

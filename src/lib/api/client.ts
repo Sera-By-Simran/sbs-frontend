@@ -37,6 +37,7 @@ export async function apiFetch<T = any>(
 }
 
 export const api = {
+  getConfig: () => apiFetch('/api/public/v1/config'),
   getCategories: () => apiFetch('/api/public/v1/categories'),
   getProducts: (params?: { category?: string; limit?: number }) => {
     const query = new URLSearchParams();
@@ -54,15 +55,22 @@ export const api = {
     occasion?: string;
     message?: string;
     marketing_consent?: boolean;
+    _hp?: string;
     items: Array<{
       product_id: string;
       quantity: number;
       customer_note?: string;
     }>;
   }) =>
-    apiFetch('/api/public/v1/enquiries', {
+    fetch('/api/enquiry', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-      next: { revalidate: 0 },
+    }).then(async (res) => {
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json?.error?.message || 'Failed to submit enquiry');
+      }
+      return json;
     }),
 };

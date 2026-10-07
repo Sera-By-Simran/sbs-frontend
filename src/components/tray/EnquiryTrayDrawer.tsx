@@ -37,6 +37,7 @@ export const EnquiryTrayDrawer: React.FC = () => {
   const [occasion, setOccasion] = useState('');
   const [message, setMessage] = useState('');
   const [consent, setConsent] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +69,7 @@ export const EnquiryTrayDrawer: React.FC = () => {
         occasion: occasion.trim() || undefined,
         message: message.trim() || undefined,
         marketing_consent: consent,
+        _hp: honeypot,
         items: trayItems.map((item) => ({
           product_id: item.product.id,
           quantity: item.quantity,
@@ -255,6 +257,17 @@ export const EnquiryTrayDrawer: React.FC = () => {
 
                 {/* Lead Capture Form */}
                 <form id="enquiry-form" onSubmit={handleEnquirySubmit} className="space-y-4 pt-2 border-t border-sera-taupe/20">
+                  {/* Invisible Honeypot to trap automated spam bots */}
+                  <input
+                    type="text"
+                    name="_hp"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    className="hidden"
+                    aria-hidden="true"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
                   <span className="text-[10px] uppercase tracking-widest text-sera-taupe font-semibold block">
                     Concierge Consultation Details
                   </span>

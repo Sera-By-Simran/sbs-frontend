@@ -21,14 +21,16 @@ import {
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [trustItems, setTrustItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [prodRes, catRes] = await Promise.allSettled([
+        const [prodRes, catRes, configRes] = await Promise.allSettled([
           api.getProducts({ limit: 8 }),
           api.getCategories(),
+          api.getConfig(),
         ]);
 
         if (prodRes.status === 'fulfilled' && prodRes.value.success) {
@@ -36,6 +38,9 @@ export default function HomePage() {
         }
         if (catRes.status === 'fulfilled' && catRes.value.success) {
           setCategories(catRes.value.data);
+        }
+        if (configRes.status === 'fulfilled' && configRes.value.success) {
+          setTrustItems(configRes.value.data.trust_items || []);
         }
       } catch (err) {
         console.error('Failed to load homepage pieces:', err);
@@ -85,31 +90,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust Strip */}
-      <section className="bg-sera-beige/60 border-y border-sera-taupe/30 py-8 px-6 lg:px-12">
-        <div className="max-w-container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="space-y-1">
-            <Truck className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
-            <h3 className="font-serif text-sm font-medium text-sera-espresso">Insured Pan-India Transit</h3>
-            <p className="text-[11px] text-sera-espresso/70">Complimentary secure delivery</p>
+      {/* Trust Strip (Dynamic CMS) */}
+      {trustItems.length > 0 && (
+        <section className="bg-sera-beige/60 border-y border-sera-taupe/30 py-8 px-6 lg:px-12">
+          <div className="max-w-container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {trustItems.map((item) => (
+              <div key={item.id} className="space-y-1">
+                <Sparkles className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
+                <h3 className="font-serif text-sm font-medium text-sera-espresso">{item.title}</h3>
+                <p className="text-[11px] text-sera-espresso/70">{item.subtitle}</p>
+              </div>
+            ))}
           </div>
-          <div className="space-y-1">
-            <ShieldCheck className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
-            <h3 className="font-serif text-sm font-medium text-sera-espresso">Certified Demi-Fine Finish</h3>
-            <p className="text-[11px] text-sera-espresso/70">Skin-friendly anti-tarnish dip</p>
-          </div>
-          <div className="space-y-1">
-            <HeartHandshake className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
-            <h3 className="font-serif text-sm font-medium text-sera-espresso">Private Concierge</h3>
-            <p className="text-[11px] text-sera-espresso/70">Dedicated bespoke styling assist</p>
-          </div>
-          <div className="space-y-1">
-            <Gem className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
-            <h3 className="font-serif text-sm font-medium text-sera-espresso">Signature Keepsake Box</h3>
-            <p className="text-[11px] text-sera-espresso/70">Velvet pouch & certificate</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Category Navigation Showcase */}
       <section className="py-20 px-6 lg:px-12 max-w-container mx-auto w-full">
