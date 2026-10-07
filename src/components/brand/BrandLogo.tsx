@@ -17,56 +17,80 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   switch (variant) {
     case 'header':
       return (
-        <div className={`relative flex items-center ${className}`}>
-          <Image
-            src="/brand/logo-header.png"
-            alt="SÉRA BY SIMRAN"
-            width={240}
-            height={80}
-            priority={priority}
-            className="h-10 w-auto object-contain"
-          />
+        <div className={`flex items-center space-x-2.5 ${className}`}>
+          <div className="w-7 h-7 relative flex-shrink-0">
+            <Image
+              src="/brand/monogram.png"
+              alt="SÉRA"
+              fill
+              priority={priority}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="font-serif text-xl tracking-[0.2em] text-sera-espresso font-normal">
+              SÉRA
+            </span>
+            <span className="text-[8px] uppercase tracking-[0.3em] text-sera-taupe font-semibold mt-0.5">
+              BY SIMRAN
+            </span>
+          </div>
         </div>
       );
 
     case 'footer':
       return (
-        <div className={`relative flex items-center ${className}`}>
-          <Image
-            src="/brand/logo-footer.svg"
-            alt="SÉRA BY SIMRAN"
-            width={180}
-            height={60}
-            priority={priority}
-            className="h-9 w-auto object-contain brightness-100"
-          />
+        <div className={`flex items-center space-x-3 ${className}`}>
+          <div className="w-8 h-8 relative flex-shrink-0">
+            <Image
+              src="/brand/monogram-white.svg"
+              alt="SÉRA"
+              fill
+              priority={priority}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="font-serif text-2xl tracking-[0.22em] text-sera-ivory font-light">
+              SÉRA
+            </span>
+            <span className="text-[8.5px] uppercase tracking-[0.35em] text-sera-champagne font-medium mt-1">
+              BY SIMRAN
+            </span>
+          </div>
         </div>
       );
 
     case 'stacked':
       return (
-        <div className={`relative flex items-center ${className}`}>
-          <Image
-            src="/brand/logo-stacked.png"
-            alt="SÉRA BY SIMRAN"
-            width={140}
-            height={140}
-            priority={priority}
-            className="h-20 w-auto object-contain"
-          />
+        <div className={`flex flex-col items-center text-center space-y-1.5 ${className}`}>
+          <div className="w-10 h-10 relative">
+            <Image
+              src="/brand/monogram.png"
+              alt="SÉRA"
+              fill
+              priority={priority}
+              className="object-contain"
+            />
+          </div>
+          <span className="font-serif text-2xl tracking-[0.25em] text-sera-espresso font-normal">
+            SÉRA
+          </span>
+          <span className="text-[9px] uppercase tracking-[0.35em] text-sera-taupe font-semibold">
+            BY SIMRAN
+          </span>
         </div>
       );
 
     case 'monogram':
       return (
-        <div className={`relative flex items-center ${className}`}>
+        <div className={`w-8 h-8 relative flex-shrink-0 ${className}`}>
           <Image
             src="/brand/monogram.png"
             alt="SÉRA Monogram"
-            width={48}
-            height={48}
+            fill
             priority={priority}
-            className="h-8 w-8 object-contain"
+            className="object-contain"
           />
         </div>
       );
