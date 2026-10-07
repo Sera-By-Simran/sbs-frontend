@@ -1,68 +1,84 @@
-import React from 'react';
-import { BrandLogo } from '@/components/brand/BrandLogo';
-import { SetupIncomplete } from '@/components/common/SetupIncomplete';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { BoutiqueHeader } from '@/components/layout/BoutiqueHeader';
+import { BoutiqueFooter } from '@/components/layout/BoutiqueFooter';
+import { EnquiryTrayDrawer } from '@/components/tray/EnquiryTrayDrawer';
+import { ProductCard } from '@/components/product/ProductCard';
+import { api } from '@/lib/api/client';
+import {
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Gem,
+  Truck,
+  HeartHandshake,
+  MessageCircle,
+  Eye,
+} from 'lucide-react';
 
 export default function HomePage() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const missingKeys: string[] = [];
-  if (!supabaseUrl) missingKeys.push('NEXT_PUBLIC_SUPABASE_URL');
-  if (!supabaseAnonKey) missingKeys.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [prodRes, catRes] = await Promise.allSettled([
+          api.getProducts({ limit: 8 }),
+          api.getCategories(),
+        ]);
 
-  if (missingKeys.length > 0) {
-    return <SetupIncomplete missingKeys={missingKeys} appName="Customer Boutique (Frontend)" />;
-  }
+        if (prodRes.status === 'fulfilled' && prodRes.value.success) {
+          setFeaturedProducts(prodRes.value.data);
+        }
+        if (catRes.status === 'fulfilled' && catRes.value.success) {
+          setCategories(catRes.value.data);
+        }
+      } catch (err) {
+        console.error('Failed to load homepage pieces:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-sera-ivory text-sera-espresso font-sans">
-      {/* Announcement Bar */}
-      <div className="bg-sera-espresso text-sera-ivory text-center py-2 text-xs tracking-widest uppercase font-medium">
-        Bespoke Luxury • Pan-India Complimentary Insured Delivery
-      </div>
-
-      {/* Main Header */}
-      <header className="sticky top-0 z-40 bg-sera-ivory/95 backdrop-blur-sm border-b border-sera-taupe/30 px-6 lg:px-12 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <BrandLogo variant="header" priority />
-          <nav className="hidden md:flex space-x-6 text-xs uppercase tracking-widest font-medium text-sera-espresso/90">
-            <a href="#boutique" className="hover:text-sera-espresso transition-colors">Boutique</a>
-            <a href="#collections" className="hover:text-sera-espresso transition-colors">Collections</a>
-            <a href="#edit" className="hover:text-sera-espresso transition-colors">The Edit</a>
-            <a href="#about" className="hover:text-sera-espresso transition-colors">About</a>
-          </nav>
-        </div>
-
-        <div className="flex items-center space-x-6 text-xs uppercase tracking-wider font-medium">
-          <button className="hidden sm:inline-block hover:opacity-75 transition-opacity">Search</button>
-          <button className="hover:opacity-75 transition-opacity">Wishlist (0)</button>
-          <button className="bg-sera-espresso text-sera-ivory px-4 py-2 rounded-sm hover:opacity-90 transition-opacity">
-            Enquiry Tray (0)
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col bg-sera-ivory text-sera-espresso font-sans selection:bg-sera-champagne selection:text-sera-espresso">
+      <BoutiqueHeader />
+      <EnquiryTrayDrawer />
 
       {/* Hero Section */}
       <section className="relative px-6 lg:px-12 py-20 lg:py-32 max-w-bleed mx-auto w-full text-center">
-        <span className="text-xs uppercase tracking-[0.25em] text-sera-taupe font-semibold mb-4 inline-block">
-          Autumn / Festive Haute Joaillerie
-        </span>
+        <div className="inline-flex items-center space-x-2 border border-sera-taupe/30 bg-white/70 px-4 py-1.5 rounded-full mb-6 shadow-xs">
+          <Sparkles className="w-3.5 h-3.5 text-sera-taupe" />
+          <span className="text-[10px] uppercase tracking-[0.25em] text-sera-taupe font-semibold">
+            Boutique Haute Joaillerie
+          </span>
+        </div>
+
         <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal leading-tight text-sera-espresso max-w-4xl mx-auto mb-6">
           The Poetry of Fine Geometry & Warm Lustre
         </h1>
+
         <p className="text-sera-espresso/80 text-sm sm:text-base max-w-xl mx-auto mb-10 leading-relaxed font-light">
           Sculptural elegance crafted for the discerning eye. Each piece is designed to reflect timeless grace, understated radiance, and effortless modern luxury.
         </p>
-        <div className="flex justify-center items-center gap-4">
-          <a
-            href="#boutique"
-            className="bg-sera-espresso text-sera-ivory px-8 py-3.5 text-xs uppercase tracking-widest font-semibold rounded-sm hover:opacity-90 transition-opacity"
+
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <Link
+            href="/boutique"
+            className="w-full sm:w-auto bg-sera-espresso text-sera-ivory px-8 py-3.5 text-xs uppercase tracking-widest font-semibold rounded-sm hover:opacity-90 transition-opacity shadow-sm"
           >
             Discover Collection
-          </a>
+          </Link>
           <a
             href="#showroom"
-            className="border border-sera-taupe/50 text-sera-espresso px-8 py-3.5 text-xs uppercase tracking-widest font-semibold rounded-sm hover:bg-sera-beige/50 transition-colors"
+            className="w-full sm:w-auto border border-sera-taupe/50 text-sera-espresso px-8 py-3.5 text-xs uppercase tracking-widest font-semibold rounded-sm hover:bg-sera-beige/50 transition-colors"
           >
             Explore Showroom
           </a>
@@ -70,110 +86,193 @@ export default function HomePage() {
       </section>
 
       {/* Trust Strip */}
-      <section className="bg-sera-beige/70 border-y border-sera-taupe/30 py-8 px-6 lg:px-12">
+      <section className="bg-sera-beige/60 border-y border-sera-taupe/30 py-8 px-6 lg:px-12">
         <div className="max-w-container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div>
-            <h3 className="font-serif text-sm font-medium text-sera-espresso mb-0.5">Insured Pan-India Transit</h3>
+          <div className="space-y-1">
+            <Truck className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
+            <h3 className="font-serif text-sm font-medium text-sera-espresso">Insured Pan-India Transit</h3>
             <p className="text-[11px] text-sera-espresso/70">Complimentary secure delivery</p>
           </div>
-          <div>
-            <h3 className="font-serif text-sm font-medium text-sera-espresso mb-0.5">100% Certified Craft</h3>
-            <p className="text-[11px] text-sera-espresso/70">Authentic materials & finishes</p>
+          <div className="space-y-1">
+            <ShieldCheck className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
+            <h3 className="font-serif text-sm font-medium text-sera-espresso">Certified Demi-Fine Finish</h3>
+            <p className="text-[11px] text-sera-espresso/70">Skin-friendly anti-tarnish dip</p>
           </div>
-          <div>
-            <h3 className="font-serif text-sm font-medium text-sera-espresso mb-0.5">Personal Concierge</h3>
+          <div className="space-y-1">
+            <HeartHandshake className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
+            <h3 className="font-serif text-sm font-medium text-sera-espresso">Private Concierge</h3>
             <p className="text-[11px] text-sera-espresso/70">Dedicated bespoke styling assist</p>
           </div>
-          <div>
-            <h3 className="font-serif text-sm font-medium text-sera-espresso mb-0.5">Signature Keepsake Box</h3>
-            <p className="text-[11px] text-sera-espresso/70">Velvet pouch & certificate included</p>
+          <div className="space-y-1">
+            <Gem className="w-4 h-4 text-sera-taupe mx-auto mb-1" />
+            <h3 className="font-serif text-sm font-medium text-sera-espresso">Signature Keepsake Box</h3>
+            <p className="text-[11px] text-sera-espresso/70">Velvet pouch & certificate</p>
           </div>
         </div>
       </section>
 
-      {/* Boutique Intro Section */}
-      <section id="boutique" className="px-6 lg:px-12 py-20 max-w-container mx-auto w-full text-center">
-        <span className="text-xs uppercase tracking-[0.2em] text-sera-taupe font-semibold mb-2 inline-block">
-          Curated Creations
-        </span>
-        <h2 className="font-serif text-3xl sm:text-4xl text-sera-espresso font-normal mb-4">
-          Everyday Radiance
-        </h2>
-        <p className="text-sera-espresso/70 text-xs sm:text-sm max-w-md mx-auto mb-12">
-          Subtle statement earrings, delicately articulated pendants, and sculpted rings calibrated for daily elevation.
-        </p>
+      {/* Category Navigation Showcase */}
+      <section className="py-20 px-6 lg:px-12 max-w-container mx-auto w-full">
+        <div className="text-center mb-12">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-sera-taupe font-semibold block mb-1">
+            Curated Categories
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-sera-espresso font-normal">
+            Refined Expressions
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-left">
-          {/* Card 1 */}
-          <div className="bg-sera-beige/40 border border-sera-taupe/20 p-4 rounded-sm flex flex-col justify-between">
-            <div className="aspect-[3/4] bg-sera-beige/80 rounded-sm mb-4 flex items-center justify-center text-sera-taupe text-xs uppercase tracking-widest">
-              3:4 Product Hero
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-sera-taupe font-semibold">Everyday Edit</span>
-              <h3 className="font-serif text-base text-sera-espresso font-normal mt-0.5">Minimal Sculpted Pendant</h3>
-              <p className="text-xs font-mono font-medium text-sera-espresso mt-1">₹1,299</p>
-            </div>
-          </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {[
+            { name: 'Necklaces & Pendants', slug: 'necklaces', desc: 'Sculptural neckpieces' },
+            { name: 'Earrings & Hoops', slug: 'earrings', desc: 'Luminous statement studs' },
+            { name: 'Rings & Bands', slug: 'rings', desc: 'Architectural modern solitaires' },
+            { name: 'Bracelets & Cuffs', slug: 'bracelets', desc: 'Tennis lines & fluid wristwear' },
+          ].map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/boutique?category=${cat.slug}`}
+              className="group bg-white/70 border border-sera-taupe/30 rounded-sm p-6 flex flex-col justify-between hover:bg-white hover:shadow-md transition-all duration-300"
+            >
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-sera-taupe block mb-1">
+                  Collection
+                </span>
+                <h3 className="font-serif text-lg text-sera-espresso font-normal group-hover:text-sera-taupe transition-colors">
+                  {cat.name}
+                </h3>
+                <p className="text-xs text-sera-espresso/60 mt-1">{cat.desc}</p>
+              </div>
 
-          {/* Card 2 */}
-          <div className="bg-sera-beige/40 border border-sera-taupe/20 p-4 rounded-sm flex flex-col justify-between">
-            <div className="aspect-[3/4] bg-sera-beige/80 rounded-sm mb-4 flex items-center justify-center text-sera-taupe text-xs uppercase tracking-widest">
-              3:4 Product Hero
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-sera-taupe font-semibold">Signature</span>
-              <h3 className="font-serif text-base text-sera-espresso font-normal mt-0.5">Baroque Pearl Drop Earrings</h3>
-              <p className="text-xs font-mono font-medium text-sera-espresso mt-1">₹1,899</p>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-sera-beige/40 border border-sera-taupe/20 p-4 rounded-sm flex flex-col justify-between">
-            <div className="aspect-[3/4] bg-sera-beige/80 rounded-sm mb-4 flex items-center justify-center text-sera-taupe text-xs uppercase tracking-widest">
-              3:4 Product Hero
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-sera-taupe font-semibold">Gifting</span>
-              <h3 className="font-serif text-base text-sera-espresso font-normal mt-0.5">Artisan Radiance Dome Ring</h3>
-              <p className="text-xs font-mono font-medium text-sera-espresso mt-1">₹1,499</p>
-            </div>
-          </div>
+              <div className="mt-8 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-sera-espresso/80 group-hover:text-sera-espresso">
+                <span>View Pieces</span>
+                <ArrowRight className="w-3.5 h-3.5 text-sera-taupe group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* Footer on Espresso */}
-      <footer className="mt-auto bg-sera-espresso text-sera-ivory border-t border-sera-espresso px-6 lg:px-12 py-16">
-        <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div className="md:col-span-2">
-            <BrandLogo variant="footer" priority />
-            <p className="text-xs text-sera-ivory/70 max-w-sm mt-4 leading-relaxed font-light">
-              Fine demi-fine jewellery designed in India. Intimate craftsmanship celebrating timeless beauty and quiet luxury.
+      {/* Featured Pieces Rail */}
+      <section className="bg-sera-beige/30 border-y border-sera-taupe/20 py-20 px-6 lg:px-12">
+        <div className="max-w-bleed mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.25em] text-sera-taupe font-semibold block mb-1">
+                Spotlight Edit
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-sera-espresso font-normal">
+                Curated Creations
+              </h2>
+            </div>
+            <Link
+              href="/boutique"
+              className="text-xs uppercase tracking-widest font-semibold text-sera-espresso hover:text-sera-taupe flex items-center space-x-1.5 transition-colors"
+            >
+              <span>Explore Complete Catalogue</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {featuredProducts.length === 0 ? (
+            <div className="p-16 text-center text-sera-taupe bg-white/60 border border-dashed border-sera-taupe/30 rounded-sm">
+              <Gem className="w-8 h-8 mx-auto opacity-30 text-sera-espresso mb-2" />
+              <p className="text-sm">New boutique pieces currently being staged in the studio.</p>
+              <Link
+                href="/boutique"
+                className="mt-3 inline-block text-xs uppercase tracking-wider font-semibold text-sera-espresso underline"
+              >
+                Browse All
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {featuredProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={{
+                    id: p.id,
+                    slug: p.slug,
+                    sku: p.sku,
+                    name: p.name,
+                    price_paise: p.price_paise,
+                    compare_at_paise: p.compare_at_paise,
+                    badge: p.badge,
+                    image_url: p.primary_media_url || null,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Virtual Showroom Feature Showcase */}
+      <section id="showroom" className="py-24 px-6 lg:px-12 max-w-container mx-auto w-full">
+        <div className="bg-white/80 border border-sera-taupe/30 rounded-sm p-8 sm:p-14 shadow-sm flex flex-col lg:flex-row items-center gap-10">
+          <div className="flex-1 space-y-4 text-center lg:text-left">
+            <div className="inline-flex items-center space-x-1.5 bg-sera-champagne/40 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-semibold text-sera-espresso">
+              <Eye className="w-3 h-3" />
+              <span>Interactive Space</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl text-sera-espresso font-normal leading-snug">
+              The Digital Showroom Experience
+            </h2>
+            <p className="text-xs sm:text-sm text-sera-espresso/70 leading-relaxed font-light">
+              Experience SÉRA creations as if standing before the velvet pedestals of our flagship salon. Discover high-magnification stone cuts, layered styling pairings, and certified finish details before ordering.
             </p>
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <Link
+                href="/boutique"
+                className="w-full sm:w-auto bg-sera-espresso text-sera-ivory px-6 py-3 rounded-sm text-xs uppercase tracking-widest font-semibold hover:opacity-90 transition-opacity"
+              >
+                Step Into Showroom
+              </Link>
+              <a
+                href="https://wa.me/919999999999?text=Hello%20SÉRA,%20I%20would%20like%20to%20book%20a%20private%20virtual%20appointment."
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto border border-sera-taupe/40 text-sera-espresso px-6 py-3 rounded-sm text-xs uppercase tracking-widest font-semibold hover:bg-sera-beige/30 transition-colors flex items-center justify-center space-x-2"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Book Private Viewing</span>
+              </a>
+            </div>
           </div>
-          <div>
-            <h4 className="text-xs uppercase tracking-widest font-semibold text-sera-champagne mb-4">Maison</h4>
-            <ul className="space-y-2 text-xs text-sera-ivory/80">
-              <li><a href="#about" className="hover:text-sera-ivory">Our Philosophy</a></li>
-              <li><a href="#showroom" className="hover:text-sera-ivory">The Showroom</a></li>
-              <li><a href="#care" className="hover:text-sera-ivory">Jewellery Care</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-xs uppercase tracking-widest font-semibold text-sera-champagne mb-4">Client Care</h4>
-            <ul className="space-y-2 text-xs text-sera-ivory/80">
-              <li><a href="#enquiry" className="hover:text-sera-ivory">Enquiry Guide</a></li>
-              <li><a href="#shipping" className="hover:text-sera-ivory">Shipping & Returns</a></li>
-              <li><a href="#concierge" className="hover:text-sera-ivory">WhatsApp Concierge</a></li>
-            </ul>
-          </div>
-        </div>
 
-        <div className="max-w-container mx-auto border-t border-sera-ivory/10 pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] text-sera-ivory/60">
-          <p>© {new Date().getFullYear()} SÉRA BY SIMRAN. All rights reserved.</p>
-          <p className="mt-2 sm:mt-0">Designed for timeless distinction.</p>
+          <div className="flex-1 w-full aspect-video bg-gradient-to-tr from-sera-espresso to-sera-espresso/90 text-sera-ivory rounded-sm p-8 flex flex-col justify-between shadow-inner relative overflow-hidden">
+            <div className="space-y-1">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-sera-champagne">
+                Curator’s Desk
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl font-light">
+                “Fine jewellery should elevate your everyday cadence, not wait in a bank vault.”
+              </h3>
+            </div>
+            <div className="border-t border-sera-taupe/30 pt-3 flex items-center justify-between text-[11px] text-sera-taupe">
+              <span>Simran — Founder & Creative Director</span>
+              <span className="font-mono">SÉRA Flagship</span>
+            </div>
+          </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Brand Story / About Section */}
+      <section id="about" className="bg-sera-beige/40 border-t border-sera-taupe/20 py-20 px-6 lg:px-12 text-center">
+        <div className="max-w-2xl mx-auto space-y-4">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-sera-taupe font-semibold block">
+            The SÉRA Ethos
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-sera-espresso font-normal">
+            Conscious Demi-Fine Elegance
+          </h2>
+          <p className="text-xs sm:text-sm text-sera-espresso/80 leading-relaxed font-light">
+            Born out of a desire for enduring beauty without prohibitive traditional markups, SÉRA BY SIMRAN bridges authentic craft and contemporary design. Every piece is an ode to refined symmetry and conscious craftsmanship.
+          </p>
+        </div>
+      </section>
+
+      <BoutiqueFooter />
     </div>
   );
 }
